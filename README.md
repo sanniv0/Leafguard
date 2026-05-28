@@ -91,4 +91,43 @@ CNN_Project_Kaggle/
 
 ---
 
+## 🚀 Deployment
+
+### Frontend (Netlify)
+1. Push code to GitHub
+2. Go to [Netlify](https://app.netlify.com) → **Add new site** → Import from GitHub
+3. **Build settings** (auto-detected from `netlify.toml`):
+   - Base: `frontend`
+   - Build command: `npm run build`
+   - Publish: `frontend/dist`
+4. Add environment variable in Netlify Site Settings:
+   - `VITE_API_URL`: Your Railway backend URL (e.g., `https://your-backend.up.railway.app`)
+
+### Backend (Railway)
+1. Push code to GitHub
+2. Go to [Railway](https://railway.app) → **New Project** → **Deploy from repo**
+3. Select your repo and deploy (auto-detected from `railway.json`)
+4. Wait for deployment → Railway will give you a public URL
+5. **Optional**: Upgrade to $5/month Developer Plan for 24/7 uptime (no sleep)
+
+---
+
+## 📂 Project Structure
+```text
+CNN_Project_Kaggle/
+├── frontend/            # React + Vite application
+│   ├── src/             # Dashboard logic & Glassmorphic UI
+│   └── ...
+├── server.py            # FastAPI Inference Engine
+├── app.py               # Streamlit Prototype
+├── best_model.keras     # Trained MobileNetV2 Model
+├── model.ipynb          # Training & Evaluation Notebook
+├── requirements.txt     # Python dependencies
+├── netlify.toml         # Netlify config
+├── railway.json         # Railway config
+└── README.md            # You are here!
+```
+
+---
+
 *Developed with ❤️ for Sustainable Agriculture.*

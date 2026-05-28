@@ -46,5 +46,8 @@ logs/
 *.temp
 *.cache
 
-# Planning Files (optional - uncomment if you don't want to track planning docs)
-# .planning/
+# Environment Variables
+.env
+*.env.local
+
+
