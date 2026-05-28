@@ -101,14 +101,21 @@ CNN_Project_Kaggle/
    - Build command: `npm run build`
    - Publish: `frontend/dist`
 4. Add environment variable in Netlify Site Settings:
-   - `VITE_API_URL`: Your Railway backend URL (e.g., `https://your-backend.up.railway.app`)
+   - `VITE_API_URL`: Your Render backend URL (e.g., `https://plant-disease-backend.onrender.com`)
 
-### Backend (Railway)
+### Backend (Render)
 1. Push code to GitHub
-2. Go to [Railway](https://railway.app) → **New Project** → **Deploy from repo**
-3. Select your repo and deploy (auto-detected from `railway.json`)
-4. Wait for deployment → Railway will give you a public URL
-5. **Optional**: Upgrade to $5/month Developer Plan for 24/7 uptime (no sleep)
+2. Go to [Render](https://render.com) → **New** → **Web Service**
+3. Connect your GitHub repo
+4. **Configure settings**:
+   - Name: `plant-disease-backend`
+   - Environment: `Python 3`
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `uvicorn server:app --host 0.0.0.0 --port 10000`
+   - Plan: `Free`
+5. Click **Create Web Service**
+6. Wait for deployment → Render will give you a public URL (e.g., `https://plant-disease-backend.onrender.com`)
+7. **Important**: Free tier sleeps after 15 mins inactivity. For no-sleep, upgrade to **$7/month Starter Plan**
 
 ---
 
@@ -124,7 +131,7 @@ CNN_Project_Kaggle/
 ├── model.ipynb          # Training & Evaluation Notebook
 ├── requirements.txt     # Python dependencies
 ├── netlify.toml         # Netlify config
-├── railway.json         # Railway config
+├── render.yaml          # Render config
 └── README.md            # You are here!
 ```
 
