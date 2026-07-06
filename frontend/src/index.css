@@ -3,20 +3,27 @@
    ======================================================== */
 
 :root {
-  --base-bg: #0b0f0d;
-  --surface-bg: rgba(24, 29, 26, 0.6);
-  --surface-high: rgba(38, 43, 41, 0.85);
-  --primary: #013220;
-  --accent: #a2d1b7;
-  --accent-neon: #00ff88;
+  --base-bg: #030806;
+
+  --surface-bg: rgba(11, 24, 19, 0.65);
+  --surface-high: rgba(15, 28, 22, 0.9);
+
+  --primary: #07110d;
+
+  --accent: #8fffd0;
+  --accent-neon: #6df7b3;
+
   --text: #dfe4e0;
-  --text-muted: #8b938c;
+  --text-muted: #a6b4ad;
+
   --error: #ffb4ab;
   --error-bg: rgba(255, 180, 171, 0.15);
+
   --success: #39ff14;
   --success-bg: rgba(57, 255, 20, 0.1);
+
   --border: rgba(255, 255, 255, 0.05);
-  
+
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-heading: 'Outfit', sans-serif;
 }
@@ -31,7 +38,7 @@
 body {
   font-family: var(--font-sans);
   background-color: var(--base-bg);
-  background-image: 
+  background-image:
     radial-gradient(at 0% 0%, rgba(1, 50, 32, 0.25) 0px, transparent 50%),
     radial-gradient(at 100% 100%, rgba(162, 209, 183, 0.08) 0px, transparent 50%);
   background-attachment: fixed;
@@ -45,13 +52,16 @@ body {
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--base-bg);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--surface-high);
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
 }
@@ -73,7 +83,10 @@ body {
    1. SIDEBAR (METRICS & LOG ENGINE)
    ======================================================== */
 .sidebar {
-  background: rgba(11, 15, 13, 0.95);
+  background:
+    linear-gradient(180deg,
+      rgba(11, 24, 19, 0.95),
+      rgba(3, 8, 6, 0.98));
   border-right: 1px solid var(--border);
   padding: 2.5rem 1.5rem;
   display: flex;
@@ -231,29 +244,50 @@ body {
 
 .main-title {
   font-family: var(--font-heading);
-  font-size: 3.5rem;
+  font-size: 4.5rem;
   font-weight: 900;
-  color: #fff;
-  letter-spacing: -0.02em;
+  color: white;
+  letter-spacing: -0.04em;
+
+  text-shadow:
+    0 0 20px rgba(143, 255, 208, 0.15),
+    0 0 60px rgba(143, 255, 208, 0.08);
+}
+
+.hero-tagline {
+  margin-top: 0.5rem;
+  font-size: 1.15rem;
+  color: #7ef7c2;
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 
 .main-description {
-  color: var(--text-muted);
-  font-size: 1.05rem;
-  line-height: 1.6;
-  max-width: 600px;
-  margin: 0.8rem auto 0;
+  color: #b7c1bb;
+  font-size: 1rem;
+  line-height: 1.8;
+  max-width: 650px;
+  margin: 1rem auto 0;
 }
 
 /* Glassmorphism Card Style */
 .glass-card {
-  background: var(--surface-bg);
+  background: rgba(28, 32, 30, 0.72);
+
   backdrop-filter: blur(16px);
-  border: 1px solid var(--border);
+  -webkit-backdrop-filter: blur(16px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
   border-radius: 24px;
+
   padding: 2.5rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.45);
+
   position: relative;
+
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -261,7 +295,10 @@ body {
 .upload-card-glow::after {
   content: '';
   position: absolute;
-  top: -10px; left: -10px; right: -10px; bottom: -10px;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
   background: radial-gradient(circle, rgba(162, 209, 183, 0.08) 0%, transparent 70%);
   border-radius: 30px;
   z-index: -1;
@@ -270,18 +307,37 @@ body {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.9; transform: scale(1.05); }
+
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+.upload-card-glow:hover {
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 0 40px rgba(143, 255, 208, 0.08),
+    0 0 80px rgba(143, 255, 208, 0.04);
+
+  transition: all 0.3s ease;
 }
 
 /* ========================================================
    3. FILE DROPZONE UI
    ======================================================== */
 .dropzone-container {
-  border: 2px dashed var(--text-muted);
+  border: 2px dashed rgba(143, 255, 208, 0.35);
   background: rgba(255, 255, 255, 0.01);
   border-radius: 20px;
-  padding: 3rem 2rem;
+  padding: 4rem 2rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -363,8 +419,15 @@ body {
 }
 
 @keyframes pulse-text {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 .custom-progress-container {
@@ -399,8 +462,15 @@ body {
 }
 
 @keyframes slide-in {
-  from { opacity: 0; transform: translateX(-30px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .result-metric {
@@ -491,8 +561,13 @@ body {
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .status-notification.success {

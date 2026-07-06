@@ -1,5 +1,9 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import './App.css'
+import { IoLeafSharp } from "react-icons/io5";
+import { GiThreeLeaves } from "react-icons/gi";
+import { PiPlantFill } from "react-icons/pi";
+import { GiRemedy } from "react-icons/gi";
 
 function App() {
   const [file, setFile] = useState(null)
@@ -12,7 +16,7 @@ function App() {
     { id: 1, time: '09:00:00', message: 'System initialized' },
     { id: 2, time: '09:00:01', message: 'Neural weights cached' }
   ])
-  
+
   const fileInputRef = useRef(null)
 
   const addLog = (message) => {
@@ -62,7 +66,7 @@ function App() {
     setScanning(true)
     setProgress(0)
     setResult(null)
-    
+
     // Stage 1: DNA Extraction
     setScanStatus('EXTRACTING CELLULAR DNA...')
     addLog('Initiating DNA sequencing...')
@@ -82,7 +86,7 @@ function App() {
     // Stage 3: Inference
     setScanStatus('RUNNING NEURAL INFERENCE...')
     addLog('Executing MobileNetV2 pipeline...')
-    
+
     const formData = new FormData()
     formData.append('file', file)
 
@@ -92,11 +96,11 @@ function App() {
         method: 'POST',
         body: formData,
       })
-      
+
       if (!response.ok) throw new Error('Inference engine failure')
-      
+
       const data = await response.json()
-      
+
       for (let i = 66; i <= 100; i += 5) {
         setProgress(i)
         await new Promise(r => setTimeout(r, 30))
@@ -128,8 +132,8 @@ function App() {
       {/* Sidebar Section */}
       <aside className="sidebar">
         <div className="brand-section">
-          <h1 className="brand-title">BOTANICAL</h1>
-          <p className="brand-subtitle">OBSERVATORY v1.0</p>
+          <h1 className="brand-title"><IoLeafSharp style={{ color: "green" }} /> AgroVision</h1>
+          <p className="brand-subtitle">  BOTANICAL ANALYTICS</p>
         </div>
 
         <div className="divider"></div>
@@ -174,50 +178,55 @@ function App() {
       <main className="workstation">
         <header className="header-banner">
           <p className="observatory-tag">Neural Diagnostics</p>
+
           <h2 className="main-title">LeafGuard AI</h2>
+
+          <p className="hero-tagline">
+            Early Detection. Healthier Crops.
+          </p>
+
           <p className="main-description">
-            High-performance botanical pathology detection powered by deep learning. 
-            Upload a leaf specimen for immediate cellular analysis.
+            Upload a leaf image and receive instant AI-powered disease detection and recommendations.
           </p>
         </header>
 
         <section className={`glass-card ${!result && !scanning ? 'upload-card-glow' : ''}`}>
           {!preview ? (
-            <div 
+            <div
               className="dropzone-container"
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current.click()}
             >
-              <div className="dropzone-icon">📥</div>
+              <div className="dropzone-icon"><GiThreeLeaves style={{ color: "#047500" }} /></div>
               <button className="dropzone-btn">Select Specimen</button>
               <p className="dropzone-hint">or drag and drop leaf image here</p>
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleFileChange} 
-                accept="image/*" 
-                style={{ display: 'none' }} 
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/*"
+                style={{ display: 'none' }}
               />
             </div>
           ) : (
             <div className="scan-animation-container">
               <img src={preview} alt="Specimen Preview" className="preview-thumbnail" />
-              
+
               {scanning ? (
                 <>
                   <p className="scan-status-text">{scanStatus}</p>
                   <div className="custom-progress-container">
-                    <div 
-                      className="custom-progress-bar" 
+                    <div
+                      className="custom-progress-bar"
                       style={{ width: `${progress}%` }}
                     ></div>
                   </div>
                 </>
               ) : !result ? (
                 <button className="dropzone-btn" onClick={startScan}>
-                  Initiate Scan
+                  Start Diagnosis
                 </button>
               ) : null}
             </div>
@@ -227,15 +236,17 @@ function App() {
             <div className="result-slide-container">
               <div className="result-metric">
                 <p className="metric-lbl">Diagnosis Result</p>
-                <h3 className="metric-val">{result.class}</h3>
+                <h3 className="metric-val">{result.class
+                  .replace(/___/g, ' ')
+                  .replace(/_/g, ' ')}</h3>
               </div>
 
               <div className="result-metric">
                 <p className="metric-lbl">Confidence Level</p>
                 <div className="top-3-row">
                   <div className="top-3-bar-container" style={{ height: '12px' }}>
-                    <div 
-                      className="top-3-bar" 
+                    <div
+                      className="top-3-bar"
                       style={{ width: `${result.confidence}%`, background: 'var(--accent-neon)' }}
                     ></div>
                   </div>
@@ -254,8 +265,8 @@ function App() {
                     <div key={i} className="top-3-row">
                       <span className="top-3-name">{pred.class}</span>
                       <div className="top-3-bar-container">
-                        <div 
-                          className="top-3-bar" 
+                        <div
+                          className="top-3-bar"
                           style={{ width: `${pred.confidence}%` }}
                         ></div>
                       </div>
@@ -265,16 +276,31 @@ function App() {
                 </div>
               </div>
 
-              <div className={`status-notification ${result.status === 'healthy' ? 'success' : 'error'}`}>
-                <span className="icon">{result.status === 'healthy' ? '✅' : '⚠️'}</span>
+              <div
+                className={`status-notification ${result.status === 'healthy' ? 'success' : 'error'
+                  }`}
+              >
+                <span className="icon">
+                  {result.status === 'healthy' ? '✅' : '⚠️'}
+                </span>
+
                 <div className="advice-body">
-                  <strong>Botanical Advice</strong>
-                  <p className="advice-text">{result.advice}</p>
+                  <strong><PiPlantFill style={{ color: "#13e90c" }} />&nbsp;  Prevention</strong>
+                  <p className="advice-text">
+                    {result.prevention}
+                  </p>
+
+                  <strong style={{ marginTop: '1rem', display: 'block' }}><GiRemedy style={{ color: "#f59e0b" }} />
+                    &nbsp; Remedy
+                  </strong>
+                  <p className="advice-text">
+                    {result.remedy}
+                  </p>
                 </div>
               </div>
-              
-              <button 
-                className="reset-btn" 
+
+              <button
+                className="reset-btn"
                 style={{ marginTop: '1.5rem', borderColor: 'var(--accent)' }}
                 onClick={() => {
                   setPreview(null)

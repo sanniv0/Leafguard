@@ -17,23 +17,81 @@ CLASS_NAMES = [
 
 # --- Botanical Advice Library ---
 BOTANICAL_ADVICE = {
-    "Pepper: Bacterial Spot": "Apply organic copper-based fungicides early in the morning. Remove and destroy infected leaves. Ensure adequate spacing between pepper plants to maximize airflow and reduce moisture retention.",
-    "Pepper: Healthy": "Specimen shows robust vascular structure and healthy chlorophyll levels. Maintain current watering and organic compost schedules.",
-    "Potato: Early Blight": "Remove affected lower foliage to prevent spores from splashing onto healthy leaves. Apply organic copper sprays or Bacillus subtilis. Implement a crop rotation schedule next season.",
-    "Potato: Late Blight": "WARNING: Highly contagious pathogen. Immediately destroy heavily infected plants. Apply preventive copper-based fungicides. Keep foliage dry by watering at the base.",
-    "Potato: Healthy": "Vigorous foliage detected. Excellent tuber development potential. Continue companion planting with marigolds to deter pests.",
-    "Tomato: Bacterial Spot": "Avoid overhead watering to prevent bacterial spread. Apply copper fungicide treatments. Keep pruning tools sanitized using alcohol or bleach solutions between cuts.",
-    "Tomato: Early Blight": "Prune lower leaves up to 12 inches from the soil to prevent soil-borne spores from splashing onto foliage. Mulch the soil bed and apply organic bio-fungicides.",
-    "Tomato: Late Blight": "High epidemic threat. Immediately quarantine the crop. Apply organic copper fungicides or bio-pesticides. Keep greenhouse humidity below 80% if growing indoors.",
-    "Tomato: Leaf Mold": "Increase greenhouse ventilation and space plants to lower humidity. Avoid watering late in the evening. Treat with sulfur-based sprays or bio-fungicides.",
-    "Tomato: Septoria Leaf Spot": "Prune affected leaves immediately. Apply organic fungicides containing copper or chlorothalonil. Apply organic mulch under plants to create a barrier against soil spores.",
-    "Tomato: Spider Mites": "Increase local humidity by misting plants. Spray foliage with organic insecticidal soap or neem oil solutions. Introduce natural predators like predatory mites.",
-    "Tomato: Target Spot": "Improve air circulation through regular pruning. Apply copper fungicides or organic bio-fungicides. Ensure proper crop rotation and remove crop residues after harvest.",
-    "Tomato: Yellow Leaf Curl Virus": "Viral pathogen spread by whiteflies. Shield plants using insect mesh nets. Remove infected specimens immediately. Use yellow sticky traps to capture whitefly vectors.",
-    "Tomato: Mosaic Virus": "Viral infection with no chemical cure. Immediately isolate and destroy infected specimens. Keep weed populations down and thoroughly sanitize all hands, gloves, and garden tools.",
-    "Tomato: Healthy": "Specimen is highly vigorous and disease-free. Maintain balanced nitrogen-potassium levels and monitor for minor pests regularly."
-}
+    "Pepper: Bacterial Spot": {
+        "prevention": "Ensure proper spacing between plants, avoid overhead irrigation, use disease-free seeds, and maintain good field sanitation.",
+        "remedy": "Remove infected leaves immediately and apply copper-based bactericides or organic fungicides during early morning hours."
+    },
 
+    "Pepper: Healthy": {
+        "prevention": "Continue regular monitoring, maintain balanced fertilization, ensure adequate airflow, and follow proper watering schedules.",
+        "remedy": "No treatment required. Continue current cultivation practices to maintain plant health."
+    },
+
+    "Potato: Early Blight": {
+        "prevention": "Practice crop rotation, avoid excessive leaf moisture, use certified disease-free seed potatoes, and maintain proper plant spacing.",
+        "remedy": "Remove affected foliage and apply copper-based fungicides or Bacillus subtilis treatments to limit disease spread."
+    },
+
+    "Potato: Late Blight": {
+        "prevention": "Avoid overhead watering, ensure proper drainage, improve air circulation, and inspect crops regularly during humid weather.",
+        "remedy": "Immediately remove severely infected plants and apply preventive copper-based fungicides to protect remaining crops."
+    },
+
+    "Potato: Healthy": {
+        "prevention": "Maintain proper irrigation, monitor for pests and diseases regularly, and continue balanced nutrient management.",
+        "remedy": "No treatment necessary. Continue existing crop management practices."
+    },
+
+    "Tomato: Bacterial Spot": {
+        "prevention": "Avoid overhead watering, use disease-free seeds, rotate crops regularly, and sanitize pruning equipment after each use.",
+        "remedy": "Apply copper fungicide treatments and remove infected leaves to reduce bacterial spread."
+    },
+
+    "Tomato: Early Blight": {
+        "prevention": "Mulch the soil, avoid wetting foliage, maintain proper spacing, and prune lower leaves to reduce fungal infection risks.",
+        "remedy": "Remove infected foliage and apply organic bio-fungicides or copper-based fungicides."
+    },
+
+    "Tomato: Late Blight": {
+        "prevention": "Maintain greenhouse humidity below 80%, improve ventilation, avoid prolonged leaf wetness, and inspect plants frequently.",
+        "remedy": "Quarantine infected plants immediately and apply approved copper fungicides or bio-pesticides."
+    },
+
+    "Tomato: Leaf Mold": {
+        "prevention": "Reduce humidity levels, improve greenhouse ventilation, avoid overcrowding, and water plants early in the day.",
+        "remedy": "Apply sulfur-based sprays or bio-fungicides and remove heavily infected foliage."
+    },
+
+    "Tomato: Septoria Leaf Spot": {
+        "prevention": "Use mulch to prevent soil splash, avoid overhead irrigation, and ensure adequate spacing between plants.",
+        "remedy": "Prune affected leaves and apply fungicides containing copper or chlorothalonil."
+    },
+
+    "Tomato: Spider Mites": {
+        "prevention": "Maintain adequate humidity, regularly inspect leaf undersides, and encourage beneficial insects in the garden.",
+        "remedy": "Apply neem oil or insecticidal soap and introduce predatory mites to control infestations naturally."
+    },
+
+    "Tomato: Target Spot": {
+        "prevention": "Promote airflow through pruning, avoid excess moisture, practice crop rotation, and remove crop debris after harvest.",
+        "remedy": "Treat plants with copper fungicides or bio-fungicides and remove infected plant material."
+    },
+
+    "Tomato: Yellow Leaf Curl Virus": {
+        "prevention": "Control whitefly populations using insect netting, sticky traps, and regular monitoring of crops.",
+        "remedy": "Remove infected plants immediately and manage whitefly vectors to prevent further transmission."
+    },
+
+    "Tomato: Mosaic Virus": {
+        "prevention": "Use certified disease-free seeds, control weeds, avoid tobacco contamination, and disinfect tools regularly.",
+        "remedy": "There is no cure. Remove and destroy infected plants immediately to prevent spread."
+    },
+
+    "Tomato: Healthy": {
+        "prevention": "Maintain balanced fertilization, monitor crops regularly, provide adequate sunlight, and follow proper irrigation practices.",
+        "remedy": "No treatment required. Continue routine care and disease monitoring."
+    }
+}
 # --- FastAPI Initialization ---
 app = FastAPI(
     title="LeafGuard AI Inference Engine",
@@ -104,7 +162,13 @@ async def predict_specimen(file: UploadFile = File(...)):
         # 5. Extract species and disease status
         species = predicted_class.split(":")[0].strip()
         status = "healthy" if "Healthy" in predicted_class else "pathogenic"
-        advice = BOTANICAL_ADVICE.get(predicted_class, "No advice available for this category.")
+        advice_data = BOTANICAL_ADVICE.get(
+            predicted_class,
+            {
+                "prevention": "No prevention advice available.",
+                "remedy": "No remedy available."
+            }
+        )
         
         # Get top-3 categories for advanced visual progress bars
         top_indices = np.argsort(prediction[0])[::-1][:3]
@@ -121,7 +185,8 @@ async def predict_specimen(file: UploadFile = File(...)):
             "confidence": confidence * 100,
             "species": species,
             "status": status,
-            "advice": advice,
+            "prevention": advice_data["prevention"],
+            "remedy": advice_data["remedy"],
             "top_predictions": top_predictions
         }
         
