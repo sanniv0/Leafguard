@@ -622,3 +622,89 @@ body {
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+
+/* ========================================================
+   6. ERROR RESULT CARD — NON-LEAF REJECTION UI
+   ======================================================== */
+.error-result-container {
+  border-left: 4px solid var(--error);
+  background: rgba(40, 20, 18, 0.85);
+  border-radius: 16px;
+  padding: 2rem 1.8rem;
+  margin-top: 1.5rem;
+  animation: slide-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.error-icon-wrapper {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--error-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse-error 2s infinite ease-in-out;
+}
+
+.error-icon-large {
+  font-size: 2rem;
+}
+
+@keyframes pulse-error {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 180, 171, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(255, 180, 171, 0);
+  }
+}
+
+.error-title {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--error);
+  letter-spacing: -0.02em;
+}
+
+.error-detail {
+  font-size: 0.95rem;
+  color: #ffd8d3;
+  line-height: 1.7;
+  max-width: 500px;
+  opacity: 0.9;
+}
+
+.error-supported-species {
+  margin-top: 0.5rem;
+  padding: 1.2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  width: 100%;
+}
+
+.species-tags {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.species-tag {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.45rem 1.2rem;
+  border-radius: 20px;
+  background: rgba(143, 255, 208, 0.08);
+  border: 1px solid rgba(143, 255, 208, 0.2);
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}

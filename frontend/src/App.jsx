@@ -12,6 +12,7 @@ function App() {
   const [progress, setProgress] = useState(0)
   const [scanStatus, setScanStatus] = useState('')
   const [result, setResult] = useState(null)
+  const [error, setError] = useState(null)
   const [logs, setLogs] = useState([
     { id: 1, time: '09:00:00', message: 'System initialized' },
     { id: 2, time: '09:00:01', message: 'Neural weights cached' }
@@ -36,6 +37,7 @@ function App() {
     setFile(selectedFile)
     setPreview(URL.createObjectURL(selectedFile))
     setResult(null)
+    setError(null)
     addLog(`Specimen loaded: ${selectedFile.name}`)
   }
 
@@ -66,6 +68,7 @@ function App() {
     setScanning(true)
     setProgress(0)
     setResult(null)
+    setError(null)
 
     // Stage 1: DNA Extraction
     setScanStatus('EXTRACTING CELLULAR DNA...')
@@ -97,7 +100,12 @@ function App() {
         body: formData,
       })
 
-      if (!response.ok) throw new Error('Inference engine failure')
+      if (!response.ok) {
+        // Parse the error detail from the backend
+        const errorData = await response.json().catch(() => null)
+        const errorMessage = errorData?.detail || 'Inference engine failure'
+        throw new Error(errorMessage)
+      }
 
       const data = await response.json()
 
@@ -109,9 +117,10 @@ function App() {
       setResult(data)
       setScanStatus('SCAN COMPLETE')
       addLog(`Analysis finished: ${data.class}`)
-    } catch (error) {
-      addLog(`FATAL: ${error.message}`)
-      setScanStatus('SCAN FAILED')
+    } catch (err) {
+      addLog(`REJECTED: ${err.message}`)
+      setScanStatus('VALIDATION FAILED')
+      setError(err.message)
     } finally {
       setScanning(false)
     }
@@ -121,6 +130,7 @@ function App() {
     setFile(null)
     setPreview(null)
     setResult(null)
+    setError(null)
     setScanning(false)
     setProgress(0)
     setScanStatus('')
@@ -190,7 +200,7 @@ function App() {
           </p>
         </header>
 
-        <section className={`glass-card ${!result && !scanning ? 'upload-card-glow' : ''}`}>
+        <section className={`glass-card ${!result && !scanning && !error ? 'upload-card-glow' : ''}`}>
           {!preview ? (
             <div
               className="dropzone-container"
@@ -224,11 +234,42 @@ function App() {
                     ></div>
                   </div>
                 </>
-              ) : !result ? (
+              ) : !result && !error ? (
                 <button className="dropzone-btn" onClick={startScan}>
                   Start Diagnosis
                 </button>
               ) : null}
+            </div>
+          )}
+
+          {/* Error Card — shown when image is rejected as non-leaf */}
+          {error && (
+            <div className="error-result-container">
+              <div className="error-icon-wrapper">
+                <span className="error-icon-large">🚫</span>
+              </div>
+              <h3 className="error-title">Invalid Specimen Detected</h3>
+              <p className="error-detail">{error}</p>
+              <div className="error-supported-species">
+                <p className="metric-lbl">SUPPORTED SPECIES</p>
+                <div className="species-tags">
+                  <span className="species-tag">🫑 Pepper</span>
+                  <span className="species-tag">🥔 Potato</span>
+                  <span className="species-tag">🍅 Tomato</span>
+                </div>
+              </div>
+              <button
+                className="dropzone-btn"
+                style={{ marginTop: '1.5rem' }}
+                onClick={() => {
+                  setPreview(null)
+                  setFile(null)
+                  setError(null)
+                  setScanStatus('')
+                }}
+              >
+                Try Another Image
+              </button>
             </div>
           )}
 
